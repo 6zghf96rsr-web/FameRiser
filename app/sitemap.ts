@@ -3,6 +3,7 @@ import { getBoard } from "@/lib/rankme/data";
 import { categories, platforms } from "@/lib/rankme/config";
 import { leaderboardPath } from "@/lib/rankme/leaderboards";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  if(process.env.CORE_V1_PRIVATE_ENABLED === 'true')return [];
   const b = await getBoard();
   if (b.demo) return [];
   const root = process.env.APP_URL || "";

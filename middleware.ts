@@ -2,6 +2,18 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { publicSupabaseConfig } from "./lib/supabase/runtime-config";
 export async function middleware(request: NextRequest) {
+  if(process.env.CORE_V1_PRIVATE_ENABLED!=='true'&&request.nextUrl.pathname==='/api/stripe/webhook')
+    return NextResponse.next({request});
+  if(process.env.CORE_V1_PRIVATE_ENABLED==='true'){
+    const path=request.nextUrl.pathname;
+    if(path.startsWith('/api/')&&path!=='/api/private/core')
+      return new NextResponse(JSON.stringify({error:'LEGACY_DISABLED'}),
+        {status:410,headers:{'Content-Type':'application/json','Cache-Control':'no-store'}});
+    if(!path.startsWith('/private')&&path!=='/api/private/core'&&path!=='/auth/private-confirm'&&
+      path!=='/auth/social/callback'&&path!=='/robots.txt'&&path!=='/sitemap.xml'){
+      return NextResponse.redirect(new URL(path==='/login'?'/private/login':'/private',request.url));
+    }
+  }
   let response = NextResponse.next({ request });
   const { url, key } = publicSupabaseConfig();
   if (url && key) {
@@ -39,6 +51,6 @@ export async function middleware(request: NextRequest) {
 }
 export const config = {
   matcher: [
-    "/((?!api/stripe/webhook|_next/static|_next/image|favicon.svg|.*\\.(?:svg|png|jpg|jpeg|webp)$).*)",
+    "/((?!_next/static|_next/image|favicon.svg|.*\\.(?:svg|ico|png|jpg|jpeg|webp|woff|woff2|ttf|otf)$).*)",
   ],
 };

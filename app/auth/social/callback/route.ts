@@ -3,7 +3,7 @@ import { finishYouTube } from "@/lib/rankme/social-oauth";
 export const dynamic = "force-dynamic";
 export async function GET(req: Request) {
   const destination = new URL(
-    "/connections",
+    process.env.CORE_V1_PRIVATE_ENABLED === 'true' ? '/private' : "/connections",
     process.env.APP_URL || new URL(req.url).origin,
   );
   try {

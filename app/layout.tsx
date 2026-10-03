@@ -14,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: `${b.settings.name} — Pay. Rank. Get Seen.`,
     description:
-      "Veřejný žebříček sociálních profilů. Pořadí určuje výhradně zaplacená částka. Ukaž svůj profil světu.",
+      "FameRiser spojuje ověřené sociální účty creatora. Pořadí určuje součet uznaných plateb a FameCreditů.",
     icons: { icon: "/brand/fameriser-fr-icon.png", shortcut: "/brand/fameriser-fr-icon.png", apple: "/brand/fameriser-fr-icon.png" },
     robots: b.demo ? { index: false, follow: false } : undefined,
   };

@@ -13,7 +13,7 @@ await build({
 });
 const result = spawnSync(
   process.execPath,
-  ["--test", "work/business.test.mjs", "work/instagram.test.mjs", "work/demo-accounts.test.mjs", "work/notices.test.mjs", "work/commerce.test.mjs", "work/connection-options.test.mjs", "work/scaling.test.mjs", "work/ranking-core.test.mjs", "work/ranking-ledger.test.mjs", "work/ranking-projection.test.mjs", "work/ranking-pilot-read.test.mjs", "work/ranking-public-api.test.mjs", "work/public-read-limit.test.mjs", "tests/ranking-pg-race-guard.test.mjs", "tests/database.test.mjs", "tests/configure-auth.test.mjs", "tests/cookie-consent.test.mjs", "tests/auth-session.test.mjs", "tests/facebook-pages.test.mjs", "tests/review-routes.test.mjs", "tests/podium-resize.test.mjs"],
+  ["--test", "work/business.test.mjs", "work/instagram.test.mjs", "work/demo-accounts.test.mjs", "work/notices.test.mjs", "work/commerce.test.mjs", "work/connection-options.test.mjs", "work/scaling.test.mjs", "work/ranking-core.test.mjs", "work/ranking-ledger.test.mjs", "work/ranking-projection.test.mjs", "work/ranking-pilot-read.test.mjs", "work/ranking-public-api.test.mjs", "work/public-read-limit.test.mjs", "tests/ranking-pg-race-guard.test.mjs", "tests/database.test.mjs", "tests/core-private.test.mjs", "tests/configure-auth.test.mjs", "tests/cookie-consent.test.mjs", "tests/auth-session.test.mjs", "tests/facebook-pages.test.mjs", "tests/review-routes.test.mjs", "tests/podium-resize.test.mjs"],
   { stdio: "inherit" },
 );
 process.exit(result.status ?? 1);
