@@ -24,12 +24,12 @@ import {
 } from "@/components/ui/dialog";
 import {DropdownMenu,DropdownMenuTrigger,DropdownMenuContent,DropdownMenuItem} from "@/components/ui/dropdown-menu";
 import { APP } from "@/lib/rankme/config";
-export function Providers({ children }: { children: React.ReactNode }) {
+export function Providers({ children, privateMode = false }: { children: React.ReactNode; privateMode?: boolean }) {
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" storageKey="fameriser-signature-theme" enableSystem>
       <>
         {children}
-        <CookieConsent />
+        {!privateMode && <CookieConsent />}
         <Toaster richColors position="bottom-right" />
       </>
     </ThemeProvider>
@@ -176,6 +176,7 @@ export function DemoNote() {
 function CookieConsent() {
   const [open, setOpen] = useState(false);
   useEffect(() => {
+    if (location.pathname.startsWith('/private')) return;
     let current = false;
     try {
       let raw = localStorage.getItem("rankme-consent");
@@ -190,7 +191,7 @@ function CookieConsent() {
       document.cookie = `rankme_analytics=no; Path=/; Max-Age=0; SameSite=Lax`;
       window.dispatchEvent(new Event("rankme:consent-changed"));
     }
-    setOpen(!current);
+    queueMicrotask(() => setOpen(!current));
     const show = () => setOpen(true);
     window.addEventListener("rankme:privacy", show);
     return () => window.removeEventListener("rankme:privacy", show);
@@ -201,7 +202,7 @@ function CookieConsent() {
     window.dispatchEvent(new Event("rankme:consent-changed"));
     setOpen(false);
   };
-  if (!open) return null;
+  if (!open || (typeof window !== 'undefined' && location.pathname.startsWith('/private'))) return null;
   return (
     <aside className="cookie-notice" aria-label="Nastavení soukromí">
       <div>

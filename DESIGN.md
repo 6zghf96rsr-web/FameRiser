@@ -66,7 +66,7 @@ Výška scény se musí přizpůsobit šířce pódia a skutečné výšce popis
 
 ## Převod do aplikace
 
-Při implementaci převést vzhled do stávajících komponent a využít jejich skutečná data a akce. Zachovat síťové žebříčky, filtry, časová období, vyhledávání, řazení, stránkování, detail profilu, účty, ověření, platby a stavy načítání, prázdných výsledků a chyb. Pořadí se dál řídí pravidly projektu pro potvrzené zaplacené částky; hodnocení ani design jej nemění.
+Při implementaci převést vzhled do stávajících komponent a využít jejich skutečná data a akce. Cílová aplikace používá nové pravidlo: jeden creator má jeden společný profil pro více ověřených sociálních účtů, v Global jeden řádek a skóre z potvrzených plateb v USD a FameCreditů. V soukromé první fázi jsou platby vypnuté; později přibudou Dodo a veřejný přístup. Zachovat stavy načítání, prázdných výsledků a chyb. Hodnocení ani design pořadí nemění.
 
 Nevkládat celou demonstrační stránku místo fungující aplikace. Fiktivní profily a kreslené portréty z předlohy se nepřenášejí do produkčních dat. Reference používá Three.js 0.160.1 z CDN a volitelné nástroje hostitele vizualizace. Aplikace používá místní závislost Three.js a komponenty `signature-podium.tsx` / `podium-scene.js`; základní textové údaje a odkazy fungují i bez WebGL. Pohyb lze vypnout a respektuje systémové omezení. Rozbalovací informace uchovávají údaje o platbách, označení promo míst a návštěvu sociálního profilu.
 
@@ -76,9 +76,9 @@ Další vizuální úpravy odvozovat z tohoto základu. Novější výslovné ro
 
 Propojené účty mají jeden hlavní přehled a jedno tlačítko „Přidat účet“. Výběr v dialogu obsahuje jen aktivní možnosti, Facebook profil a spravovaná stránka se rozlišují. Neaktivní integrace jsou pouze stručnou informací, rozpracované neověřené odkazy jsou sbalené zvlášť. Přihlašovací metody patří do nastavení účtu. Při přihlášení zobrazit dostupné sociální metody; stejné tlačítko slouží novému i stávajícímu uživateli. E-mail je rozbalovací alternativa. Zachovat ověření poskytovatelem, povinná potvrzení podmínek a výslovný souhlas se zveřejněním stránky po zaplacení.
 
-## Veřejné částky (22. 9. 2026)
+## Veřejné částky (22. 9. 2026; překonáno 3. 10. 2026)
 
-U všech veřejných profilů používat „Hodnota umístění“: součet skutečných plateb a přidělených promo kreditů po jednotlivých měnách. Jednotlivé profily veřejně neoznačovat jako promo a nepopisovat kredit jako zaplacenou částku. Stručně vysvětlit, že hodnota zahrnuje platby i kredity. Rozpis obou složek zůstává pouze v účtu vlastníka; pořadí nadále určuje původní RankScore.
+Historický popis se vztahoval na starý web. Nová verze ukazuje zvlášť agregát skutečně uznaných plateb v USD, FC a jejich společnou rankingovou hodnotu; jednotlivé platby a identita plátce jsou soukromé. FC nejsou zaplacené peníze ani příjem creatora. Pořadí se řídí novým kontraktem v1.1, při shodě časem dosažení a veřejným UUID. V soukromém pilotu je cash část nulová.
 
 ## Mobilní žebříček (22. 9. 2026)
 
@@ -90,4 +90,4 @@ Do 700 px má úvod kompaktní nadpis a výzvu k přidání profilu. Vysvětlen�
 
 Úvod zvýrazňuje „Objevovat profily“ s přímým přesunem do hledání; vedle je vstup pro tvůrce. Odkaz na původní síť je dostupný přímo u každého vítěze. Vítězové se nejprve zobrazí jako kompaktní karty v pořadí 1–2–3, na mobilu pod sebou. Na větší obrazovce lze přepnout na schválené 3D pódium. Výchozí přehled dává přednost jménům, tvorbě a návštěvě sítě už v první obrazovce. Zachovat tmavý vzhled a zlatý/fialový/pistáciový akcent umístění.
 
-Tvůrce vidí postup Připojit účet → Zkontrolovat náhled → Promo nebo platba → Výsledek a statistiky. Náhled je kontrola vzhledu, nenahrazuje ověření vlastnictví. Automatické promo zůstává zachované; je-li již aktivní, náhled to výslovně sdělí. Facebook stránka zůstává neveřejná do potvrzené platby. Objednávky mají vlastní záložku, podrobnosti ověření jsou rozbalovací a nastavení účtu nepředchází samotným profilům.
+V první soukromé fázi tvůrce vidí postup Registrace → Jeden creator profil → Ověření sociálního účtu → Výslovná volba zveřejnění v pilotu → Žebříček. Za každý nový odlišný ověřený účet se jednou přidělí 1 FC, nejvýše 10. Staré promo ani checkout nejsou součástí této cesty. Po připojení Dodo přibude nákup podle nových pravidel. Podrobnosti ověření jsou rozbalovací a nastavení účtu nepředchází samotnému profilu.

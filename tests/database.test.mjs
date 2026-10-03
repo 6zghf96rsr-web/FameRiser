@@ -1220,6 +1220,8 @@ await test('paged board preserves public visibility, complete counts, ranking an
 await db.exec('alter table net._http_response add column headers jsonb');
 await db.exec(await readFile(new URL('../supabase/migrations/029_mail_throughput.sql',import.meta.url),'utf8'));
 await db.exec(await readFile(new URL('../supabase/migrations/030_legacy_mail_retry_window.sql',import.meta.url),'utf8'));
+await db.exec(await readFile(new URL('../supabase/migrations/031_page_check_private_hosting.sql',import.meta.url),'utf8'));
+await db.exec(await readFile(new URL('../supabase/migrations/032_core_private_v1.sql',import.meta.url),'utf8'));
 await test('mail uses a shared one-second throttle, provider cooldown and stable per-message keys',async()=>{
  await db.exec('begin');try{
   await query("update email_outbox set status='cancelled' where status<>'sent'");
