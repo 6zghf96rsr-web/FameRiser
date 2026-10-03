@@ -1,6 +1,6 @@
 {
   "format_version": 1,
-  "contract": "ADR-0001-draft",
+  "contract": "ADR-0001-draft.1",
   "source": "FameRiser Product & Implementation Blueprint v1.1, latest approved decisions",
   "units": {
     "cash": "USD minor units",
@@ -261,7 +261,7 @@
           "cash_usd_minor": 500,
           "fc": 1,
           "combined_score_micro": 6000000,
-          "rules_version": "ADR-0001-draft",
+          "rules_version": "ADR-0001-draft.1",
           "projection_revision": 17,
           "as_of": "2026-10-01T12:00:00Z",
           "ranking_disclosure": "paid_ranking"
