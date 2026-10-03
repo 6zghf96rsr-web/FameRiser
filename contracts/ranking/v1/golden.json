@@ -1,0 +1,278 @@
+{
+  "format_version": 1,
+  "contract": "ADR-0001-draft",
+  "source": "FameRiser Product & Implementation Blueprint v1.1, latest approved decisions",
+  "units": {
+    "cash": "USD minor units",
+    "fc": "whole FameCredits",
+    "score": "score_micro: 1000000 per USD or FC",
+    "time": "ISO 8601 UTC; period bounds are inclusive start, exclusive end"
+  },
+  "cases": [
+    {
+      "id": "creator-three-accounts-shared-score",
+      "rules": [4, 5, 6, 13, 15, 36, 202, 203, 288],
+      "input": {
+        "creator_id": "creator-a",
+        "campaign_started": true,
+        "promo_slots_used_before": 0,
+        "first_verification_at": "2026-10-01T10:00:00Z",
+        "verified_accounts": [
+          { "id": "ig-1", "platform": "Instagram", "category": "Fitness" },
+          { "id": "yt-1", "platform": "YouTube", "category": "Fitness" },
+          { "id": "fb-1", "platform": "Facebook", "category": "Music" }
+        ],
+        "paid_gross_usd_minor": 0
+      },
+      "expected": {
+        "welcome_fc": 3,
+        "campaign_fc": 5,
+        "total_fc": 8,
+        "cash_score_micro": 0,
+        "fc_score_micro": 8000000,
+        "combined_score_micro": 8000000,
+        "new_promo_slots_used": 1,
+        "global_rows_for_creator": 1,
+        "platform_score_micro_each": { "Instagram": 8000000, "YouTube": 8000000, "Facebook": 8000000 },
+        "category_rows_for_creator": { "Fitness": 1, "Music": 1 },
+        "category_links": { "Fitness": ["ig-1", "yt-1"], "Music": ["fb-1"] }
+      }
+    },
+    {
+      "id": "promo-full-welcome-still-ranks",
+      "rules": [33, 36, 202, 286, 287],
+      "input": {
+        "creator_id": "creator-b",
+        "campaign_started": true,
+        "promo_slots_used_before": 1000,
+        "newly_verified_social_account_id": "yt-2"
+      },
+      "expected": {
+        "welcome_fc": 1,
+        "campaign_fc": 0,
+        "combined_score_micro": 1000000,
+        "new_promo_slots_used": 0,
+        "eligible_for_public_rank": true,
+        "public_campaign_offer_available": false
+      }
+    },
+    {
+      "id": "registration-before-launch-verification-after-launch",
+      "rules": [202, 203, 204],
+      "input": {
+        "creator_registered_at": "2026-09-28T12:00:00Z",
+        "campaign_started_at": "2026-10-01T00:00:00Z",
+        "first_social_verification_at": "2026-10-01T12:00:00Z",
+        "promo_slots_used_before": 12
+      },
+      "expected": {
+        "welcome_fc": 1,
+        "campaign_fc": 5,
+        "new_promo_slots_used": 1,
+        "combined_score_micro": 6000000
+      }
+    },
+    {
+      "id": "reconnect-does-not-mint-welcome-fc",
+      "rules": [37, 38, 40],
+      "input": {
+        "creator_id": "creator-c",
+        "provider_subject": "instagram:12345",
+        "existing_welcome_grant_fc": 1,
+        "events": ["disconnect", "reconnect", "reverify"]
+      },
+      "expected": {
+        "new_welcome_grants": 0,
+        "lifetime_welcome_fc": 1,
+        "all_time_fc_score_micro": 1000000
+      }
+    },
+    {
+      "id": "welcome-cap-ten-per-main-profile",
+      "rules": [36, 37, 38],
+      "input": {
+        "creator_id": "creator-d",
+        "distinct_eligible_verified_social_accounts": 10,
+        "existing_welcome_fc": 0
+      },
+      "expected": {
+        "welcome_fc": 10,
+        "welcome_score_micro": 10000000,
+        "lifetime_welcome_fc_cap": 10
+      }
+    },
+    {
+      "id": "same-social-identity-cannot-claim-twice",
+      "rules": [26, 36, 37],
+      "input": {
+        "provider_subject": "youtube:UC123",
+        "first_claim_creator_id": "creator-e",
+        "second_claim_creator_id": "creator-f"
+      },
+      "expected": {
+        "second_active_verified_owner_allowed": false,
+        "additional_welcome_fc": 0
+      }
+    },
+    {
+      "id": "gross-usd-score-ignores-tax-and-provider-fee",
+      "rules": [34, 36, 49, 50, 51],
+      "input": {
+        "confirmed_payments": [
+          { "payment_id": "pay-tax-0", "gross_usd_minor": 500, "tax_usd_minor": 0, "provider_fee_usd_minor": 60 },
+          { "payment_id": "pay-tax-1", "gross_usd_minor": 500, "tax_usd_minor": 100, "provider_fee_usd_minor": 60 }
+        ]
+      },
+      "expected": {
+        "score_micro_by_payment": { "pay-tax-0": 5000000, "pay-tax-1": 5000000 },
+        "combined_cash_score_micro": 10000000,
+        "recorded_gross_usd_minor": 1000,
+        "recorded_tax_usd_minor": 100,
+        "recorded_provider_fee_usd_minor": 120
+      }
+    },
+    {
+      "id": "usd-bid-minimum-and-whole-dollar",
+      "rules": [49, 51, 52],
+      "input": {
+        "candidate_gross_usd_minor": [499, 500, 501, 1000]
+      },
+      "expected": {
+        "accepted_gross_usd_minor": [500, 1000],
+        "rejected_gross_usd_minor": [499, 501],
+        "score_micro_for_500": 5000000
+      }
+    },
+    {
+      "id": "beat-next-and-take-first-exceed-target",
+      "rules": [46, 47, 49, 53],
+      "input": {
+        "quotes": [
+          { "mode": "beat_next", "own_score_micro": 10000000, "target_score_micro": 12000000 },
+          { "mode": "take_first", "own_score_micro": 20000000, "target_score_micro": 100000000 }
+        ]
+      },
+      "expected": {
+        "gross_bid_usd_by_mode": { "beat_next": 5, "take_first": 81 },
+        "resulting_score_micro_by_mode": { "beat_next": 15000000, "take_first": 101000000 },
+        "rank_guaranteed": false
+      }
+    },
+    {
+      "id": "equal-combined-score-uses-attained-time",
+      "rules": [2, 34, 39],
+      "input": {
+        "creators": [
+          { "id": "a", "registered_at": "2026-09-20T00:00:00Z", "cash_score_micro": 0, "fc_score_micro": 5000000, "attained_at": "2026-10-01T10:00:00Z" },
+          { "id": "b", "registered_at": "2026-09-01T00:00:00Z", "cash_score_micro": 3000000, "fc_score_micro": 2000000, "attained_at": "2026-10-01T11:00:00Z" }
+        ]
+      },
+      "expected": {
+        "combined_score_micro_each": 5000000,
+        "ranked_creator_ids": ["a", "b"],
+        "registration_time_used_for_tie": false,
+        "cash_share_used_for_tie": false
+      }
+    },
+    {
+      "id": "welcome-fc-utc-day-and-week-boundary",
+      "rules": [40, 41, 42],
+      "input": {
+        "grants": [
+          { "id": "fc-sunday", "amount_fc": 1, "granted_at": "2026-10-04T23:59:00Z" },
+          { "id": "fc-monday", "amount_fc": 1, "granted_at": "2026-10-05T00:00:00Z" }
+        ]
+      },
+      "expected": {
+        "daily_fc": { "2026-10-04": 1, "2026-10-05": 1 },
+        "weekly_fc_by_start": { "2026-09-28T00:00:00Z": 1, "2026-10-05T00:00:00Z": 1 },
+        "all_time_fc": 2
+      }
+    },
+    {
+      "id": "late-webhook-uses-provider-success-time-once",
+      "rules": [42, 43, 44, 45, 51],
+      "input": {
+        "payment_id": "pay-late-1",
+        "gross_usd_minor": 500,
+        "provider_success_at": "2026-10-04T23:59:00Z",
+        "webhook_received_at": ["2026-10-05T00:01:00Z", "2026-10-05T00:02:00Z"]
+      },
+      "expected": {
+        "cash_contributions_created": 1,
+        "cash_score_micro": 5000000,
+        "daily_cash_score_micro": { "2026-10-04": 5000000, "2026-10-05": 0 },
+        "weekly_cash_score_micro_by_start": { "2026-09-28T00:00:00Z": 5000000, "2026-10-05T00:00:00Z": 0 }
+      }
+    },
+    {
+      "id": "held-payment-ranks-on-release-only",
+      "rules": [43, 44, 153, 154],
+      "input": {
+        "creator_id": "creator-held",
+        "payment_id": "pay-held-1",
+        "gross_usd_minor": 500,
+        "provider_success_at": "2026-10-04T23:59:00Z",
+        "recipient_restricted_when_paid": true,
+        "restriction_lifted_at": "2026-10-05T12:00:00Z",
+        "release_attempts": 2
+      },
+      "expected": {
+        "payment_records_created": 1,
+        "ranking_contributions_created": 1,
+        "cash_score_micro_before_release": 0,
+        "provider_success_at_preserved": "2026-10-04T23:59:00Z",
+        "ranking_effective_at": "2026-10-05T12:00:00Z",
+        "cash_score_micro_after_release": 5000000,
+        "daily_cash_score_micro": { "2026-10-04": 0, "2026-10-05": 5000000 },
+        "weekly_cash_score_micro_by_start": { "2026-09-28T00:00:00Z": 0, "2026-10-05T00:00:00Z": 5000000 }
+      }
+    },
+    {
+      "id": "creator-and-guest-fan-bids-share-recipient-score",
+      "rules": [4, 34, 51, 55, 57],
+      "input": {
+        "recipient_creator_id": "creator-shared",
+        "confirmed_payments": [
+          { "payment_id": "pay-owner", "payer_kind": "creator", "gross_usd_minor": 500 },
+          { "payment_id": "pay-guest", "payer_kind": "guest_fan", "gross_usd_minor": 1000 }
+        ]
+      },
+      "expected": {
+        "recipient_creator_id": "creator-shared",
+        "recipient_cash_score_micro": 15000000,
+        "recipient_global_rows": 1,
+        "guest_contact_email_public": false
+      }
+    },
+    {
+      "id": "public-projection-discloses-cash-and-fc-safely",
+      "rules": [34, 36, 39, 51],
+      "input": {
+        "creator_id": "creator-public",
+        "confirmed_cash_gross_usd_minor": 500,
+        "active_fc": 1,
+        "projection_revision": 17,
+        "as_of": "2026-10-01T12:00:00Z"
+      },
+      "expected": {
+        "public_fields": {
+          "creator_id": "creator-public",
+          "cash_usd_minor": 500,
+          "fc": 1,
+          "combined_score_micro": 6000000,
+          "rules_version": "ADR-0001-draft",
+          "projection_revision": 17,
+          "as_of": "2026-10-01T12:00:00Z",
+          "ranking_disclosure": "paid_ranking"
+        },
+        "excluded_public_fields": ["email", "provider_payment_id", "billing_address", "oauth_token", "individual_orders", "fraud_signals"]
+      }
+    }
+  ],
+  "unresolved": [
+    { "blueprint_item": 289, "topic": "Multiple login registrations by the same physical person and promo eligibility", "fixture_defined": false },
+    { "topic": "Exact attained_at tie, refund/dispute reconstruction and historical migration", "fixture_defined": false },
+    { "topic": "Local currency checkout valuation", "fixture_defined": false }
+  ]
+}

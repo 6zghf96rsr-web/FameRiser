@@ -1,0 +1,158 @@
+/* Network identity is independent of position and payment amount. */
+[data-network] {
+  --network-color: #7b43cf;
+  --network-ink: #6934b9;
+  --network-action: #7b43cf;
+  --network-on-action: #fff;
+  --network-stripe: linear-gradient(var(--network-color), var(--network-color));
+}
+[data-network="instagram"] {
+  --network-color: #dc3c91;
+  --network-ink: #ae246f;
+  --network-action: #b72578;
+  --network-stripe: linear-gradient(110deg, #edaa38, #df387c 48%, #863cd2);
+}
+[data-network="facebook"] {
+  --network-color: #1877f2;
+  --network-ink: #175bc0;
+  --network-action: #1763cf;
+}
+[data-network="tiktok"] {
+  --network-color: #17b5b9;
+  --network-ink: #067579;
+  --network-action: #17191d;
+  --network-stripe: linear-gradient(100deg, #25e1db 0%, #25e1db 48%, #fe4567 52%, #fe4567 100%);
+}
+[data-network="youtube"] {
+  --network-color: #ef2636;
+  --network-ink: #bc1829;
+  --network-action: #c61d2e;
+}
+[data-network="twitch"] {
+  --network-color: #9146ff;
+  --network-ink: #7130c4;
+  --network-action: #7932d6;
+}
+[data-network="x"] {
+  --network-color: #25272c;
+  --network-ink: #25272c;
+  --network-action: #17191d;
+}
+.dark [data-network] { --network-ink: #c4abff; }
+.dark [data-network="instagram"] { --network-ink: #ff9dcc; }
+.dark [data-network="facebook"] { --network-ink: #8cbeff; }
+.dark [data-network="tiktok"] { --network-ink: #6ce3de; }
+.dark [data-network="youtube"] { --network-ink: #ff9ca4; }
+.dark [data-network="twitch"] { --network-ink: #cfacff; }
+.dark [data-network="x"] {
+  --network-color: #e4e5e8;
+  --network-ink: #e4e5e8;
+  --network-action: #e4e5e8;
+  --network-on-action: #17191d;
+}
+.network-theme {
+  --primary: var(--network-action);
+  --primary-foreground: var(--network-on-action);
+  --blue: var(--network-ink);
+  --ring: var(--network-ink);
+  --accent: color-mix(in srgb, var(--network-ink) 12%, var(--card));
+  --accent-foreground: var(--network-ink);
+  --soft-blue: color-mix(in srgb, var(--network-ink) 10%, var(--card));
+}
+.main-shell.network-theme:not([data-network="all"]) .hero {
+  background-image: var(--network-stripe);
+  background-size: 100% 5px;
+  background-repeat: no-repeat;
+  border-top: 0;
+  margin-top: 16px;
+}
+.main-shell.network-theme .hero h1 > span:first-child { color: var(--network-ink); }
+.main-shell.network-theme:not([data-network="all"]) .hero-right {
+  background: var(--soft-blue);
+  border-color: var(--network-color);
+  box-shadow: 4px 4px 0 var(--network-color);
+  color: var(--foreground);
+}
+.main-shell.network-theme:not([data-network="all"]) .spotlight-label,
+.main-shell.network-theme:not([data-network="all"]) .spotlight-bottom small { color: var(--network-ink); }
+.main-shell.network-theme:not([data-network="all"]) .spotlight-bottom { border-color: var(--border); }
+.main-shell.network-theme:not([data-network="all"]) .spotlight-button {
+  background: var(--network-action);
+  color: var(--network-on-action);
+}
+.main-shell.network-theme:not([data-network="all"]) .join-card-button {
+  background: var(--card);
+  color: var(--network-ink);
+}
+.network-boards a[data-network]:not([data-network="all"]) {
+  border-color: color-mix(in srgb, var(--network-color) 45%, var(--border));
+  color: var(--network-ink);
+}
+.network-boards a[data-network]:not([data-network="all"]):hover {
+  background: color-mix(in srgb, var(--network-ink) 10%, var(--card));
+}
+.network-boards a[data-network]:not([data-network="all"])[aria-current="page"] {
+  color: var(--network-on-action);
+  background: var(--network-action);
+  border-color: var(--network-action);
+}
+.podium-card.network-theme,
+.podium-card.network-theme.place-1,
+.dark .podium-card.network-theme.place-1 {
+  border-top: 0;
+  background: linear-gradient(var(--card), var(--card)) padding-box;
+  padding-top: 33px;
+}
+.podium-card.network-theme::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 9px;
+  background: var(--network-stripe);
+}
+.podium-card.network-theme .place-badge {
+  color: var(--foreground);
+  background: var(--muted);
+}
+.person-avatar[data-network] {
+  background: color-mix(in srgb, var(--network-ink) 12%, var(--card));
+  color: var(--network-ink);
+  outline: 2px solid var(--network-color);
+}
+.podium-card.network-theme .person-avatar.large { outline-color: var(--network-color); }
+.network-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--soft-blue);
+  color: var(--network-ink);
+  border-radius: 999px;
+  padding: 4px 9px;
+  font-size: 12px;
+  line-height: 1.4;
+  font-weight: 650;
+  white-space: nowrap;
+}
+.social-label > .network-label { padding: 4px 9px; color: var(--network-ink); }
+.podium-card.network-theme .visit-link { color: var(--network-ink); }
+.ranking-row.network-theme { border-left: 5px solid var(--network-color); }
+.ranking-row.network-theme .row-person div > span { flex-wrap: wrap; white-space: normal; overflow: visible; gap: 5px 8px; }
+.ranking-row.network-theme .row-handle { min-width: 0; overflow-wrap: anywhere; }
+.ranking-row.network-theme .row-bid { border-color: var(--network-color); color: var(--network-ink); }
+.profile-detail-card.network-theme .profile-cover {
+  background: var(--soft-blue);
+  color: var(--network-ink);
+  border-top: 9px solid var(--network-color);
+}
+.profile-detail-card.network-theme .profile-cover > strong { color: var(--network-ink); }
+@media (max-width: 1200px) {
+  .podium-card.network-theme, .podium-card.network-theme.place-1,
+  .dark .podium-card.network-theme.place-1 { padding-top: 27px; }
+}
+@media (max-width: 700px) {
+  .podium-card.network-theme, .podium-card.network-theme.place-1,
+  .dark .podium-card.network-theme.place-1 { padding-top: 29px; }
+  .ranking-row.network-theme .row-person div > span { gap: 5px; }
+  .ranking-row.network-theme .row-handle { flex-basis: 100%; }
+  .ranking-row.network-theme .network-label { padding: 3px 6px; }
+}

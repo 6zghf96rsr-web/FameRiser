@@ -1,0 +1,37 @@
+name: Verify
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      RANKME_DEMO: "true"
+      PAYMENTS_ENABLED: "false"
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci --include=dev --include=optional --no-audit --no-fund
+      - name: Lint regression gate
+        run: npm run lint:baseline
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Migration test coverage
+        run: npm run migrations:check
+      - name: Test in isolated PGlite database
+        run: npm test
+      - name: Build preview artifact
+        run: npm run build
+      - name: Boot local preview and check homepage
+        run: npm run preview:smoke
