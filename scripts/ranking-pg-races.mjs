@@ -429,7 +429,8 @@ async function main() {
     packages: "external" });
   const { handleLeaderboardRead, handleCreatorRead } =
     await import(pathToFileURL(transportPath).href);
-  const transportDeps = { reader, cursorKey: "isolated-postgres-synthetic-cursor-key-32-bytes",
+  const transportDeps = { reader, cursorKeys: { active: {
+    id: "pg1", secret: "isolated-postgres-synthetic-cursor-key-32-bytes" } },
     rateLimit: async () => true };
   const boardUrl = "http://localhost/api/v1/leaderboards?scope=global&period=all_time&limit=1";
   const transportPage = await handleLeaderboardRead(new Request(boardUrl), transportDeps);
