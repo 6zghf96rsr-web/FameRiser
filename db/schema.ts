@@ -49,3 +49,12 @@ export const demoWriteLimits = sqliteTable("demo_write_limits", {
   windowStart: integer("window_start").notNull(),
   writes: integer("writes").notNull(),
 });
+
+// Shared public-read budget. The key is an HMAC of the edge IP and UTC day;
+// neither a raw address nor a client-supplied identifier is stored here.
+export const publicReadLimits = sqliteTable("public_read_limits", {
+  subjectHash: text("subject_hash").primaryKey(),
+  windowStart: integer("window_start").notNull(),
+  requests: integer("requests").notNull(),
+  lastSeen: integer("last_seen").notNull(),
+}, (table) => [index("public_read_limits_last_seen").on(table.lastSeen)]);
