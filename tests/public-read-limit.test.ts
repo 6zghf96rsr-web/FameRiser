@@ -86,3 +86,19 @@ test("old pseudonymous limiter rows are pruned and daily keys rotate", async () 
     assert.notEqual(rows[0].subject_hash, oldKey);
   } finally { sqlite.close(); }
 });
+
+test("a late request from an older minute cannot reset a newer shared window", async () => {
+  const { db, sqlite } = database();
+  try {
+    const visitor = request("203.0.113.8");
+    const current = createPublicReadRateLimit(db, secret, () => 1_860_000);
+    const late = createPublicReadRateLimit(db, secret, () => 1_800_000);
+    for (let index = 0; index < 59; index++) assert.equal(await current(visitor), true);
+    assert.equal(await late(visitor), false);
+    assert.equal(await current(visitor), true);
+    assert.equal(await current(visitor), false);
+    const row = sqlite.prepare("SELECT window_start, requests FROM public_read_limits").get()!;
+    assert.deepEqual({ window_start: row.window_start, requests: row.requests },
+      { window_start: 31, requests: 60 });
+  } finally { sqlite.close(); }
+});

@@ -45,7 +45,8 @@ export function createPublicReadRateLimit(
             THEN public_read_limits.requests + 1 ELSE 1 END,
           last_seen = excluded.last_seen
         WHERE public_read_limits.window_start < excluded.window_start
-          OR public_read_limits.requests < ?
+          OR (public_read_limits.window_start = excluded.window_start
+            AND public_read_limits.requests < ?)
         RETURNING requests
       `).bind(subjectHash, minute, minute, requestsPerMinute),
     ]);
