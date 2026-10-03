@@ -53,9 +53,9 @@ test('new private core registers one creator, awards verified FC once, and hides
   await assert.rejects(()=>one('select public.core_v1_register($1,$2,$3,$4,$5,$6) as id',
     [owner,'Creator A','CZ',true,true,'old-policy']));
   const a=(await one('select public.core_v1_register($1,$2,$3,$4,$5,$6) as id',
-    [owner,'Creator A','CZ',true,true,'2026-10-03.1'])).id;
+    [owner,'Creator A','CZ',true,true,'2026-10-03.2'])).id;
   const b=(await one('select public.core_v1_register($1,$2,$3,$4,$5,$6) as id',
-    [other,'Creator B','CZ',true,true,'2026-10-03.1'])).id;
+    [other,'Creator B','CZ',true,true,'2026-10-03.2'])).id;
   assert.notEqual(a,b);
   assert.equal((await board()).rows.length,0);
   await q(`insert into public.social_connections(id,user_id,platform,remote_id,status,method,social_url,label) values
@@ -123,7 +123,7 @@ test('welcome FC caps at ten and UTC periods exclude older grants',async()=>{
   await q('insert into auth.users(id) values($1)',[third]);
   await q('insert into public.users(id) values($1)',[third]);
   const creator=(await one('select public.core_v1_register($1,$2,$3,$4,$5,$6) as id',
-    [third,'Creator C','CZ',true,true,'2026-10-03.1'])).id;
+    [third,'Creator C','CZ',true,true,'2026-10-03.2'])).id;
   for(let i=0;i<11;i++){
     const connection=crypto.randomUUID();
     const subject='UC'+String(i).padStart(22,'0');

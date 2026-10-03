@@ -24,12 +24,12 @@ import {
 } from "@/components/ui/dialog";
 import {DropdownMenu,DropdownMenuTrigger,DropdownMenuContent,DropdownMenuItem} from "@/components/ui/dropdown-menu";
 import { APP } from "@/lib/rankme/config";
-export function Providers({ children }: { children: React.ReactNode }) {
+export function Providers({ children, privateMode = false }: { children: React.ReactNode; privateMode?: boolean }) {
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" storageKey="fameriser-signature-theme" enableSystem>
       <>
         {children}
-        <CookieConsent />
+        {!privateMode && <CookieConsent />}
         <Toaster richColors position="bottom-right" />
       </>
     </ThemeProvider>

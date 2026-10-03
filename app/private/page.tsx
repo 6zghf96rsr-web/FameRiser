@@ -27,7 +27,7 @@ export default async function PrivatePage({searchParams}:{searchParams:Promise<{
   if(owner.error||connections.error)throw new Error('Soukromé žebříčky nejsou připojené k nové databázi.');
   const board=owner.data?await db.rpc('core_v1_board',{p_period:period}):null;
   if(board?.error)throw new Error('Žebříček není dostupný.');
-  const emptyBoard:PrivateBoard={rules_version:'2026-10-03.1',period:period as PrivateBoard['period'],
+  const emptyBoard:PrivateBoard={rules_version:'2026-10-03.2',period:period as PrivateBoard['period'],
     period_start:null,as_of:new Date().toISOString(),projection_revision:0,rows:[]};
   const available=(connections.data||[]).filter(c=>c.account_kind!=='facebook_page'&&
     ['YouTube','Facebook','Twitch','X'].includes(c.platform));

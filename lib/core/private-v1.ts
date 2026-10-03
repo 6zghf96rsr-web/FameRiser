@@ -1,4 +1,4 @@
-export const PRIVATE_RULES_VERSION = '2026-10-03.1';
+export const PRIVATE_RULES_VERSION = '2026-10-03.2';
 // Verified against the Ministry of Finance ARES record for IČO 87155982.
 export const PRIVATE_OPERATOR = {
   name:'Petr Suchý',

@@ -37,12 +37,15 @@ try{
   const rules=await fetch(origin+'/private/rules');
   assert.equal(rules.status,200);
   assert.match(await rules.text(),/1 FC/);
+  const report=await fetch(origin+'/private/report?url='+encodeURIComponent(origin+'/private#creator'));
+  assert.equal(report.status,200);
+  assert.match(await report.text(),/Oznámit problém s obsahem/);
   const oldApi=await fetch(origin+'/api/leaderboard');
   assert.equal(oldApi.status,410);
   assert.equal((await oldApi.json()).error,'LEGACY_DISABLED');
   const mutate=await fetch(origin+'/api/private/core',{method:'POST',redirect:'manual',headers:{'Content-Type':'application/json','Origin':origin},body:JSON.stringify({action:'youtube'})});
   assert.equal(mutate.status,401,`Unauthenticated mutation: ${mutate.status} ${mutate.headers.get('location')||''} ${(await mutate.text()).slice(0,400)}`);
-  console.log('Private preview smoke passed: redirect, login, new rules, legacy API block and auth gate.');
+  console.log('Private preview smoke passed: redirect, login, legal notice form, legacy API block and auth gate.');
 }finally{
   if(!exited){server.kill('SIGTERM');await Promise.race([new Promise(resolve=>server.once('exit',resolve)),delay(3000)]);if(!exited)server.kill('SIGKILL');}
 }

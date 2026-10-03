@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { noticeInput, noticeReasons, MAX_NOTICE_FILES, MAX_NOTICE_FILE_SIZE, receiptText } from '@/lib/rankme/notices';
 
 type Receipt = { case_id: string; created_at: string; receipt_state: string };
-export function ReportForm({ initialURL = '', demo }: { initialURL?: string; demo: boolean }) {
+export function ReportForm({ initialURL = '', demo, privacyHref = '/privacy' }: { initialURL?: string; demo: boolean; privacyHref?: string }) {
   const [url, setURL] = useState(initialURL), [reason, setReason] = useState('impersonation');
   const [details, setDetails] = useState(''), [name, setName] = useState(''), [email, setEmail] = useState('');
   const [child, setChild] = useState(false), [faith, setFaith] = useState(false);
@@ -77,7 +77,7 @@ export function ReportForm({ initialURL = '', demo }: { initialURL?: string; dem
         {files.map((file,i) => <div className="notice-file" key={`${file.name}-${i}`}><span>{file.name} · {Math.ceil(file.size / 1024)} kB</span><Button type="button" variant="ghost" size="icon" aria-label={`Odebrat ${file.name}`} onClick={() => setFiles(files.filter((_,index) => index !== i))}><X size={16}/></Button></div>)}
       </div>}
       <label className="check-line"><Checkbox checked={faith} onCheckedChange={v => setFaith(v === true)}/><span>V dobré víře prohlašuji, že informace a tvrzení v tomto oznámení jsou podle mého vědomí přesné a úplné.</span></label>
-      <p className="field-help">Údaje použijeme k vyřízení oznámení a související komunikaci. <a href="/privacy" target="_blank" rel="noreferrer">Zásady soukromí</a></p>
+      <p className="field-help">Údaje použijeme k vyřízení oznámení a související komunikaci. <a href={privacyHref} target="_blank" rel="noreferrer">Zásady soukromí</a></p>
     </fieldset>
     {error && <p className="form-error" role="alert">{error}</p>}
     <Button type="submit" disabled={busy}>{busy && <LoaderCircle className="animate-spin" size={16}/>} {demo ? 'Vyzkoušet potvrzení v demu' : 'Odeslat oznámení'}</Button>

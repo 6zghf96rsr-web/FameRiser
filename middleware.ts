@@ -6,10 +6,10 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next({request});
   if(process.env.CORE_V1_PRIVATE_ENABLED==='true'){
     const path=request.nextUrl.pathname;
-    if(path.startsWith('/api/')&&path!=='/api/private/core')
+    if(path.startsWith('/api/')&&path!=='/api/private/core'&&path!=='/api/notices')
       return new NextResponse(JSON.stringify({error:'LEGACY_DISABLED'}),
         {status:410,headers:{'Content-Type':'application/json','Cache-Control':'no-store'}});
-    if(!path.startsWith('/private')&&path!=='/api/private/core'&&path!=='/auth/private-confirm'&&
+    if(!path.startsWith('/private')&&path!=='/api/private/core'&&path!=='/api/notices'&&path!=='/auth/private-confirm'&&
       path!=='/auth/social/callback'&&path!=='/robots.txt'&&path!=='/sitemap.xml'){
       return NextResponse.redirect(new URL(path==='/login'?'/private/login':'/private',request.url));
     }

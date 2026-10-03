@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="cs" suppressHydrationWarning>
       <body>
-        <Providers>{children}</Providers>
+        <Providers privateMode={process.env.CORE_V1_PRIVATE_ENABLED === 'true'}>{children}</Providers>
       </body>
     </html>
   );

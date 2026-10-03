@@ -15,7 +15,7 @@ create table core_v1.creators (
   erased_at timestamptz,
   created_at timestamptz not null default clock_timestamp(),
   first_verified_at timestamptz,
-  accepted_rules_version text not null check (accepted_rules_version = '2026-10-03.1'),
+  accepted_rules_version text not null check (accepted_rules_version = '2026-10-03.2'),
   accepted_at timestamptz not null default clock_timestamp()
 );
 
@@ -215,7 +215,7 @@ declare v_id uuid;
 begin
   perform 1 from public.users where id=p_user and not banned for share;
   if p_adult is distinct from true or p_publish is null or
-     p_rules_version is distinct from '2026-10-03.1' or
+     p_rules_version is distinct from '2026-10-03.2' or
      p_name is null or length(btrim(p_name)) not between 2 and 80 or
      (p_country is not null and p_country !~ '^[A-Z]{2}$') or
      not exists(select 1 from public.users where id=p_user and not banned) then
@@ -351,7 +351,7 @@ begin
     'cash_usd_minor',0,'fc',fc,'combined_usd_minor',fc*100,
     'attained_at',to_char(attained_at at time zone 'UTC','YYYY-MM-DD"T"HH24:MI:SS.MS"Z"'))
     order by rank),'[]'::jsonb) into v_rows from ranked;
-  return jsonb_build_object('rules_version','2026-10-03.1','period',p_period,
+  return jsonb_build_object('rules_version','2026-10-03.2','period',p_period,
     'period_start',case when v_start is null then null else
       to_char(v_start at time zone 'UTC','YYYY-MM-DD"T"HH24:MI:SS.MS"Z"') end,
     'as_of',to_char(v_as_of at time zone 'UTC','YYYY-MM-DD"T"HH24:MI:SS.MS"Z"'),
